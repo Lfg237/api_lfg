@@ -2,23 +2,29 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Test Paiement</title>
+  <title>HelepMoney + Core Web Vitals</title>
 </head>
 <body>
-  <h1>🔑 Vérification Paiement</h1>
+  <h1>🔑 Test Paiement & Performance</h1>
 
   <input type="text" id="cle" placeholder="Entre ta clé API">
-  <button id="btn">Vérifier</button>
+  <button id="btn">Vérifier clé</button>
   <p id="resultat"></p>
 
   <script type="module">
-    import { verifierCle } from "../paiement.js";
+    import { verifierCle, envoyerVitals } from "../paiement.js";
+    import { getLCP, getFID, getCLS } from "https://cdn.jsdelivr.net/npm/web-vitals@2.1.4/dist/web-vitals.module.js";
 
     document.getElementById("btn").addEventListener("click", async () => {
       const cle = document.getElementById("cle").value;
       const res = await verifierCle(cle);
       document.getElementById("resultat").textContent = res;
     });
+
+    // Collecte automatique Core Web Vitals
+    getLCP(metric => envoyerVitals("LCP", metric.value));
+    getFID(metric => envoyerVitals("FID", metric.value));
+    getCLS(metric => envoyerVitals("CLS", metric.value));
   </script>
 </body>
 </html>
