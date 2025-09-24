@@ -9,3 +9,22 @@ export async function verifierCle(cle) {
     return "⚠️ Erreur serveur, vérifiez votre connexion.";
   }
 }
+
+// Fonction pour envoyer Core Web Vitals
+export async function envoyerVitals(metrie, valeur) {
+  try {
+    await fetch("https://ton-projet.vercel.app/api/collect-vitals", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        metrie,
+        valeur,
+        url: window.location.href,
+        navigateur: navigator.userAgent,
+        date: new Date().toISOString()
+      })
+    });
+  } catch (err) {
+    console.error("Erreur envoi Vitals:", err);
+  }
+}
