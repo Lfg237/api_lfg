@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Paiement</title>
+</head>
+<body>
+  <h1>🔑 Vérification Paiement</h1>
+
+  <input type="text" id="cle" placeholder="Entre ta clé API">
+  <button id="btn">Vérifier</button>
+  <p id="resultat"></p>
+
+  <script type="module">
+    import { verifierCle } from "../paiement.js";
+
+    document.getElementById("btn").addEventListener("click", async () => {
+      const cle = document.getElementById("cle").value;
+      const res = await verifierCle(cle);
+      document.getElementById("resultat").textContent = res;
+    });
+  </script>
+</body>
+</html>
