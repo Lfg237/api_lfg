@@ -1,20 +1,11 @@
-<script type="module">
-  import { getLCP, getFID, getCLS } from 'https://cdn.jsdelivr.net/npm/web-vitals@2.1.4/dist/web-vitals.module.js';
-
-  function envoyerDonnees(metrie, valeur) {
-    // Ici tu peux envoyer les données sur ton serveur ou les loguer
-    console.log(`Métrique: ${metrie}, Valeur: ${valeur}`);
-    // Exemple d'envoi POST vers ton serveur :
-    /*
-    fetch('https://ton-serveur.com/collect-web-vitals', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ metrie, valeur, date: new Date().toISOString() })
-    });
-    */
+// api/collect-vitals.js
+export default function handler(req, res) {
+  if (req.method === "POST") {
+    const data = req.body;
+    console.log("📊 Core Web Vitals reçu :", data);
+    // Ici tu peux stocker dans DB ou service externe
+    res.status(200).json({ success: true, message: "Données reçues ✅" });
+  } else {
+    res.status(405).json({ success: false, message: "Méthode non autorisée" });
   }
-
-  getLCP(metric => envoyerDonnees('LCP', metric.value));
-  getFID(metric => envoyerDonnees('FID', metric.value));
-  getCLS(metric => envoyerDonnees('CLS', metric.value));
-</script>
+}
