@@ -3,125 +3,257 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lesfacilitateurs Bot</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<title>Casino Roulette Hors Ligne</title>
 <style>
-body {
-  font-family: 'Poppins', sans-serif;
-  background: #f3f4f6;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-}
-#botBox {
-  background: white;
-  padding: 20px;
-  border-radius: 15px;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-#botHead {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-#botHead img {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-}
-#botMessage {
-  font-size: 14px;
-  margin-bottom: 15px;
-}
-.permission {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #f9fafb;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 8px;
-}
-.permission label {
-  font-size: 14px;
-}
-#validateBtn {
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 8px;
-  cursor: pointer;
-  width: 100%;
-  font-size: 15px;
-}
-#validateBtn:hover {
-  background: #1e4ed8;
-}
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #ffecd2, #fcb69f);
+    color: #222;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  h1 { margin-top: 10px; text-align: center; }
+  #roulette-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin-top: 20px;
+  }
+  #roulette {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 5px solid #fff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 15px #f0f, 0 0 25px #0ff;
+  }
+  .slice {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0% 0%;
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
+  #indicator {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    background: red;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    z-index: 10;
+  }
+  #controls {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+  button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.2s;
+  }
+  button:hover { transform: scale(1.1); }
+  #players {
+    margin-top: 20px;
+    width: 90%;
+  }
+  .player {
+    margin-bottom: 10px;
+    padding: 10px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 10px;
+  }
+  #links {
+    margin-top: 20px;
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding-bottom: 10px;
+    width: 100%;
+  }
+  #links button {
+    flex: 0 0 auto;
+  }
+  #popup {
+    position: fixed;
+    top:0; left:0;
+    width: 100%; height:100%;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+  }
+  #popup-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+  }
 </style>
 </head>
 <body>
 
-<div id="botBox">
-  <div id="botHead">
-    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712139.png" alt="bot">
-    <h3>Lesfacilitateurs Middleman 🤖</h3>
-  </div>
-  <div id="botMessage">
-    Bonjour 👋 je suis votre assistant personnel.<br><br>
-    Avant de commencer, j’ai besoin de quelques autorisations pour mieux vous aider :
-  </div>
+<h1>🎰 Casino Roulette Hors Ligne</h1>
 
-  <div id="permissions">
-    <div class="permission"><label>📍 Localisation</label><input type="checkbox" id="loc"></div>
-    <div class="permission"><label>🔔 Notifications</label><input type="checkbox" id="notif"></div>
-    <div class="permission"><label>📞 Appels sortants</label><input type="checkbox" id="calls"></div>
-    <div class="permission"><label>💬 Conversations simulées</label><input type="checkbox" id="chat"></div>
-  </div>
+<div id="roulette-container">
+  <div id="roulette"></div>
+  <div id="indicator"></div>
+</div>
 
-  <button id="validateBtn">Valider mes autorisations</button>
+<div id="controls">
+  <button onclick="chooseColor('red')" style="background:red;color:white;">Rouge</button>
+  <button onclick="chooseColor('black')" style="background:black;color:white;">Noir</button>
+  <button onclick="chooseColor('green')" style="background:green;color:white;">Vert</button>
+  <button onclick="spinRoulette()">Tourner</button>
+  <button onclick="showPopup()">Acheter Jetons</button>
+</div>
+
+<div id="players"></div>
+
+<h3>Autres jeux</h3>
+<div id="links">
+  <button onclick="alert('Jeu 1')">Jeu 1</button>
+  <button onclick="alert('Jeu 2')">Jeu 2</button>
+  <button onclick="alert('Jeu 3')">Jeu 3</button>
+</div>
+
+<audio id="casino-sound" src="casino.mp3" loop></audio>
+<button onclick="toggleMusic()">🎵 Pause/Play Musique</button>
+
+<div id="popup">
+  <div id="popup-content">
+    <h3>Achat de jetons</h3>
+    <p>Bénéficiaires:</p>
+    <p>1. Loveline Wirnkar - 676353859</p>
+    <p>2. Bibi OM - 656523656</p>
+    <p>Ou utilisez le code admin: 233233</p>
+    <input type="text" id="transactionInput" placeholder="Collez le message de transaction">
+    <button onclick="validateTransaction()">Valider</button>
+    <button onclick="closePopup()">Annuler</button>
+  </div>
 </div>
 
 <script>
-const SUPABASE_URL = "https://nqqlsntgmorujffrntih.supabase.co";
-const SUPABASE_KEY = "+4f2y&Eq!2DWVZa";
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const colors = ['red','black','green','red','black','red','black','red','black','green'];
+  const roulette = document.getElementById('roulette');
+  const indicator = document.getElementById('indicator');
+  let chosenColor = null;
+  let currentPlayer = 0;
+  let players = [
+    {name:'Joueur 1', jetons:1000},
+    {name:'Joueur 2', jetons:1000}
+  ];
 
-// Simule un identifiant unique (tu peux remplacer par un vrai ID utilisateur plus tard)
-const userId = "user_" + Math.random().toString(36).substring(2,10);
-
-// Sauvegarde dans Supabase
-document.getElementById('validateBtn').addEventListener('click', async ()=>{
-  const permissions = {
-    localisation: document.getElementById('loc').checked,
-    notifications: document.getElementById('notif').checked,
-    appels: document.getElementById('calls').checked,
-    chat: document.getElementById('chat').checked
+  function drawRoulette() {
+    roulette.innerHTML='';
+    let angle = 0;
+    colors.forEach(c=>{
+      const slice = document.createElement('div');
+      slice.classList.add('slice');
+      slice.style.background=c;
+      slice.style.transform=`rotate(${angle}deg)`;
+      roulette.appendChild(slice);
+      angle += 360/colors.length;
+    });
   }
 
-  // Insertion ou mise à jour
-  const { data, error } = await supabase
-    .from('user_permissions')
-    .upsert([{ 
-      id: userId,
-      permissions,
-      created_at: new Date()
-    }])
-
-  if(error){
-    alert("⚠️ Erreur d’enregistrement : " + error.message)
-  } else {
-    alert("✅ Autorisations enregistrées ! Bienvenue à bord 🌍")
-    document.getElementById('botMessage').innerHTML = 
-      "Merci d’avoir configuré vos autorisations. Vous pouvez maintenant utiliser toutes les fonctionnalités du bot.";
+  function updatePlayers() {
+    const container = document.getElementById('players');
+    container.innerHTML='';
+    players.forEach((p,i)=>{
+      const div = document.createElement('div');
+      div.className='player';
+      div.innerHTML=`<b>${p.name}</b> - Jetons: ${p.jetons} ${i===currentPlayer?'⬅ Joueur en cours':''}`;
+      container.appendChild(div);
+    });
   }
-});
+
+  function chooseColor(color){
+    chosenColor=color;
+    alert('Vous avez choisi '+color);
+  }
+
+  function spinRoulette(){
+    if(!chosenColor){
+      alert('Choisissez une couleur avant de tourner!');
+      return;
+    }
+    if(players[currentPlayer].jetons<100){
+      alert('Vous n\'avez pas assez de jetons!');
+      return;
+    }
+    let spins=Math.floor(Math.random()*10)+10;
+    let anglePerSlice = 360/colors.length;
+    let finalSlice = Math.floor(Math.random()*colors.length);
+    let finalAngle = 360*spins + finalSlice*anglePerSlice + anglePerSlice/2;
+
+    roulette.style.transition='transform 3s ease-out';
+    roulette.style.transform=`rotate(${finalAngle}deg)`;
+
+    setTimeout(()=>{
+      let resultColor = colors[finalSlice];
+      alert('Résultat: '+resultColor);
+      if(resultColor===chosenColor){
+        alert('Vous gagnez 100 jetons!');
+        players[currentPlayer].jetons+=100;
+      } else {
+        alert('Vous perdez 100 jetons!');
+        players[currentPlayer].jetons-=100;
+        if(players[currentPlayer].jetons<0) players[currentPlayer].jetons=0;
+      }
+      currentPlayer=(currentPlayer+1)%players.length;
+      updatePlayers();
+      chosenColor=null;
+      roulette.style.transition='none';
+      roulette.style.transform=`rotate(${finalSlice*anglePerSlice}deg)`;
+    },3100);
+  }
+
+  function showPopup(){ document.getElementById('popup').style.display='flex'; }
+  function closePopup(){ document.getElementById('popup').style.display='none'; }
+
+  function validateTransaction(){
+    let val = document.getElementById('transactionInput').value.trim();
+    if(val.includes('Loveline') || val.includes('Bibi') || val==='233233'){
+      alert('Transaction validée! 100 jetons ajoutés.');
+      players[currentPlayer].jetons+=100;
+      updatePlayers();
+      closePopup();
+    } else {
+      alert('Transaction invalide ou trop vieille!');
+    }
+  }
+
+  function toggleMusic(){
+    const audio = document.getElementById('casino-sound');
+    if(audio.paused) audio.play(); else audio.pause();
+  }
+
+  drawRoulette();
+  updatePlayers();
 </script>
 
 </body>
