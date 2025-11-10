@@ -135,10 +135,16 @@
 
 <h3>Autres jeux</h3>
 <div id="links">
-  <button onclick="alert('https://d-sable-theta.vercel.app')">Jeu 1</button>
-  <button onclick="alert('Jeu 2')">Jeu 2</button>
-  <button onclick="alert('Jeu 3')">Jeu 3</button>
+  <button onclick="openGame('https://d-sable-theta.vercel.app')">Jeu 1</button>
+  <button onclick="openGame('https://monjeu2.vercel.app')">Jeu 2</button>
+  <button onclick="openGame('https://monjeu3.vercel.app')">Jeu 3</button>
 </div>
+
+<script>
+  function openGame(url){
+    window.open(url, '_blank'); // ouvre le jeu dans un nouvel onglet
+  }
+
 
 <audio id="casino-sound" src="casino.mp3" loop></audio>
 <button onclick="toggleMusic()">🎵 Pause/Play Musique</button>
